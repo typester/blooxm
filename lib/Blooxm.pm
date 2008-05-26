@@ -4,9 +4,18 @@ use Moose;
 
 our $VERSION = 0.000_001;
 
-sub handle_request {
-    my $c = shift;
-    $c->res->body('Hello!');
+with 'Blooxm::Config';
+
+sub setup {}
+
+sub handler {
+    my $self = shift;
+    sub { $self->dispatch(@_) };
+}
+
+sub dispatch {
+    my ($self, $c) = @_;
+    $c->res->body('Hey!');
 }
 
 =head1 NAME
