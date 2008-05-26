@@ -6,14 +6,12 @@ our $VERSION = 0.000_001;
 
 with 'Blooxm::Config';
 
-sub setup {}
-
 sub handler {
     my $self = shift;
-    sub { $self->dispatch(@_) };
+    sub { $self->handle_request(@_) };
 }
 
-sub dispatch {
+sub handle_request {
     my ($self, $c) = @_;
     $c->res->body('Hey!');
 }

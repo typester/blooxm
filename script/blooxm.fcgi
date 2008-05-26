@@ -12,9 +12,13 @@ use HTTP::Engine;
 use Blooxm;
 use Blooxm::Interface::FCGI;
 
+my $blooxm =  Blooxm->new_with_config(
+    configfile => File::Spec->catfile( $FindBin::Bin, qw/.. config.yaml/ )
+);
+
 my $engine = HTTP::Engine->new(
     interface => Blooxm::Interface::FCGI->new_with_options(
-        request_handler => 'Blooxm::handle_request',
+        request_handler => $blooxm->handler,
     ),
 );
 
