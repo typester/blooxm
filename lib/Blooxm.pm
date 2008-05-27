@@ -2,9 +2,35 @@ package Blooxm;
 use 5.008_001;
 use Moose;
 
+use Blooxm::Config;
+use Blooxm::Dispatcher;
+use Blooxm::Types;
+
 our $VERSION = 0.000_001;
 
-with 'Blooxm::Config';
+has config => (
+    is       => 'rw',
+    isa      => 'Blooxm::Config',
+    required => 1,
+    coerce   => 1,
+);
+
+has dispatcher => (
+    is  => 'rw',
+    isa => 'Blooxm::Dispatcher',
+    default => sub {
+        Blooxm::Dispatcher->new( config => shift->config );
+    },
+);
+
+sub BUILD {
+    my $self = shift;
+
+    # setup plugins
+    for my $plugin (@{ $self->config->plugins }) {
+        $plugin->meta->apply($self->dispatcher);
+    }
+}
 
 sub handler {
     my $self = shift;
@@ -13,7 +39,15 @@ sub handler {
 
 sub handle_request {
     my ($self, $c) = @_;
-    $c->res->body('Hey!');
+
+    my @hooks = qw/
+      parse_request
+      load_templates
+      find_entries
+      render
+      /;
+
+    $self->dispatcher->$_($c) for @hooks;
 }
 
 =head1 NAME

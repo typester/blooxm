@@ -1,1 +1,6 @@
 entries_dir: ./entries
+
+plugins:
+  - module: Test
+    config:
+      foo: bar

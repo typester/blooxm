@@ -12,8 +12,8 @@ use HTTP::Engine;
 use Blooxm;
 use Blooxm::Interface::FCGI;
 
-my $blooxm =  Blooxm->new_with_config(
-    configfile => File::Spec->catfile( $FindBin::Bin, qw/.. config.yaml/ )
+my $blooxm = Blooxm->new(
+    config => File::Spec->catfile( $FindBin::Bin, qw/.. config.yaml/ )
 );
 
 my $engine = HTTP::Engine->new(
